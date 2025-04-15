@@ -1,0 +1,23 @@
+{
+  "name": "task-runner",
+  "version": "0.0.1",
+  "private": true,
+  "author": {
+    "name": "Alexander",
+    "email": "dr46ag@gmail.com"
+  },
+  "main": "src/main.ts",
+  "engines": {
+    "node": "22"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev:build": "tsc --watch",
+    "dev:start": "node --watch dist/main.js",
+    "start": "node dist/main.js"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "typescript": "^5.8.3"
+  }
+}

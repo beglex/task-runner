@@ -1,0 +1,6 @@
+/dist/
+/node_modules/
+/tmp/
+/.env
+/eslint.config.mjs
+/package-lock.json
