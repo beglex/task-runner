@@ -36,14 +36,14 @@ export class Logger {
     }
 
     debug(...args: any[]) {
-        Logger.debug(`[${this.className}] `, ...args);
+        return Logger.debug(`[${this.className}] `, ...args);
     }
 
     info(...args: any[]) {
-        Logger.info(`[${this.className}] `, ...args);
+        return Logger.info(`[${this.className}] `, ...args);
     }
 
     warning(...args: any[]) {
-        Logger.warning(`[${this.className}] `, ...args);
+        return Logger.warning(`[${this.className}] `, ...args);
     }
 }

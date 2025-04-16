@@ -1,6 +1,6 @@
 {
   "name": "task-runner",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "author": {
     "name": "Alexander",
@@ -13,8 +13,8 @@
   "scripts": {
     "build": "tsc",
     "dev:build": "tsc --watch",
-    "dev:start": "node --watch dist/main.js",
-    "start": "node dist/main.js"
+    "dev:start": "node --env-file .env --watch dist/main.js",
+    "start": "node --env-file .env dist/main.js"
   },
   "devDependencies": {
     "@types/node": "^22.14.1",

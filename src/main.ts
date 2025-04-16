@@ -1,11 +1,12 @@
 import {createInterface} from 'node:readline';
 
-import {Logger, LogLevel, sampleTask} from './helpers';
+import {getConfig, Logger, LogLevel, sampleTask} from './helpers';
 import {EventTaskRunner, TaskRunner} from './services';
 
 Logger.level = LogLevel.DEBUG;
 
 const logger = new Logger('Main');
+const config = getConfig();
 let now = 0;
 
 process.on('exit', () => {
@@ -16,20 +17,20 @@ function startTaskRunner() {
     logger.info(`Starting ${TaskRunner.name}`);
     now = Date.now();
 
-    const runner = new TaskRunner({rate: 500, batchSize: 50});
+    const runner = new TaskRunner({rate: config.rate, batchSize: config.batchSize});
 
-    for (let i = 0; i < 5000; i++) {
+    for (let i = 0; i < config.totalTasks; i++) {
         const id = String(i);
         runner.addTask({id, action: () => sampleTask(id)});
     }
 
     setTimeout(() => {
-        runner.rate = 50;
-    }, 5000);
+        runner.rate = config.changeRateValue;
+    }, config.changeRateTimeout);
 
     setTimeout(() => {
         runner.stop();
-    }, 12000);
+    }, config.stopTimeout);
 
     runner.start();
 }
@@ -38,20 +39,20 @@ function startEventTaskRunner() {
     logger.info(`Starting ${EventTaskRunner.name}`);
     now = Date.now();
 
-    const runner = new EventTaskRunner({rate: 5, batchSize: 2});
+    const runner = new EventTaskRunner({rate: config.rate, batchSize: config.batchSize});
 
-    for (let i = 0; i < 5000; i++) {
+    for (let i = 0; i < config.totalTasks; i++) {
         const id = String(i);
         runner.emit('add-task', {id, action: () => sampleTask(id)});
     }
 
     setTimeout(() => {
-        runner.emit('rate-change', 50);
-    }, 5000);
+        runner.emit('rate-change', config.changeRateValue);
+    }, config.changeRateTimeout);
 
     setTimeout(() => {
         runner.emit('stop');
-    }, 12000);
+    }, config.stopTimeout);
 
     runner.emit('start');
 }
