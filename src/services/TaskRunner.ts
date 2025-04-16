@@ -1,5 +1,6 @@
+import type {RunnerConfig, RunnerStatus, Task} from '../types';
+
 import {Logger} from '../helpers';
-import {RunnerConfig, RunnerStatus, Task} from '../types';
 
 export class TaskRunner {
     #rate = 100;
@@ -102,11 +103,12 @@ export class TaskRunner {
 
     private async executeBatch(): Promise<void> {
         const tasks = this.#taskQueue.slice(0, Math.min(this.#batchSize, this.#taskQueue.length));
-
         if (!tasks.length) {
             this.logger.info('No tasks in queue');
             return;
         }
+
+        this.logger.debug(`Executing ${tasks.length} tasks`);
 
         const results = await Promise.allSettled(
             tasks.map(id => this.executeTask(id)),
@@ -123,19 +125,11 @@ export class TaskRunner {
         if (this.#status === 'stopped') {
             return;
         }
-        
+
         try {
-            const startTime = Date.now();
+            this.executeBatch();
 
-            await this.executeBatch();
-
-            const elapsed = Date.now() - startTime;
-            const delay = Math.max(0, this.#interval - elapsed);
-
-            this.#timerId = setTimeout(() => this.run(), delay);
-
-            this.logger.info(`Batch processed in ${elapsed}ms, next run in ${delay}ms`);
-
+            this.#timerId = setTimeout(() => this.run(), this.#interval);
         } catch (err: any) {
             // Чисто теоретически этот блок никогда не выполнится в силу наличия try..catch в executeTask,
             // но есть очень небольшая вероятность, если система нагружена под 100%

@@ -1,7 +1,7 @@
 import {EventEmitter} from 'node:events';
 
-import {Logger} from '../helpers';
-import {RunnerConfig, Task} from '../types';
+import type {RunnerConfig, Task} from '../types';
+
 import {TaskRunner} from './TaskRunner';
 
 interface TaskEvents {
